@@ -1,0 +1,859 @@
+<script src="https://unpkg.com/vue-router@3"></script>
+<script>
+  
+  const HomeView = {
+    data: function() {
+      return {
+        items: [
+          {
+            dense: false,
+            outlined: true,
+            value: null,
+            placeholder: "Enter some text 1"
+          },
+          {
+            dense:true,
+            outlined: false,
+            value: null,
+            placeholder: "Enter some text 2"
+          },
+        ],
+      }
+    },
+    components: {
+      MyInput,
+      BaseInputText
+    },
+    template:`
+    <div>
+      <h2>Home</h2>
+      <my-input 
+        v-for="(item, index) in items" 
+        :item="item" 
+        :dense="item.dense"
+        :value="item.value" 
+        :placeholder="item.placeholder"
+        :outlined="item.outlined"
+        :key="index" 
+      />
+    </div>
+    `
+  }
+
+const AboutView = {
+  template: `
+    <div>
+      <h1>About</h1>
+    </div>
+  `
+}
+
+const UserView = {
+  data: () => {
+    return {
+      items: [
+        {id: 1,text: `text 1`,value: 'https://randomuser.me/api/portraits/women/1.jpg'},
+        {id: 2,text: 'text 2',value: 'https://randomuser.me/api/portraits/women/2.jpg'},
+        {id: 3,text: 'text 3',value: 'https://randomuser.me/api/portraits/women/3.jpg'}
+      ],
+      src: ''
+    }
+  },
+  watch: {
+    src(){
+      console.log('this.src=' ,this.src,'\n$event ',$event)
+    }
+  },
+  methods: {
+    logIt(event){
+      this.src = this.items[event-1].value
+    }
+  },
+  template: `
+  <div>
+    <v-sheet class="d-flex bg-surface-variant">
+      <v-autocomplete
+        v-if="items"
+        clearable
+        chips
+        label="Autocomplete"
+        :items="items.map(item => item.text)"
+        v-on:input="logIt($event)"
+        variant="solo"
+      ></v-autocomplete>
+    </v-sheet>
+    <v-card
+      v-if="this.src"
+      max-width="375"
+      class="mx-auto"
+    >
+      <v-img
+        :src="src"
+        height="300px"
+        dark
+      >
+        <v-row class="fill-height">
+          <v-card-title>
+            <v-btn
+              dark
+              icon
+            >
+              <v-icon>mdi-chevron-left</v-icon>
+            </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn
+              dark
+              icon
+              class="mr-4"
+            >
+              <v-icon>mdi-pencil</v-icon>
+            </v-btn>
+            <v-btn
+              dark
+              icon
+            >
+              <v-icon>mdi-dots-vertical</v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-spacer></v-spacer>
+          <v-card-title class="white--text pl-12 pt-12">
+            <div class="text-h4 pl-12 pt-12">
+              Ali Conners
+            </div>
+          </v-card-title>
+        </v-row>
+      </v-img>
+      <v-list two-line>
+        <v-list-item>
+          <v-list-item-icon>
+            <v-icon color="indigo">
+              mdi-phone
+            </v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>(650) 555-1234</v-list-item-title>
+            <v-list-item-subtitle>Mobile</v-list-item-subtitle>
+          </v-list-item-content>
+
+          <v-list-item-icon>
+            <v-icon>mdi-message-text</v-icon>
+          </v-list-item-icon>
+        </v-list-item>
+
+        <v-list-item>
+          <v-list-item-action></v-list-item-action>
+
+          <v-list-item-content>
+            <v-list-item-title>(323) 555-6789</v-list-item-title>
+            <v-list-item-subtitle>Work</v-list-item-subtitle>
+          </v-list-item-content>
+
+          <v-list-item-icon>
+            <v-icon>mdi-message-text</v-icon>
+          </v-list-item-icon>
+        </v-list-item>
+
+        <v-divider inset></v-divider>
+
+        <v-list-item>
+          <v-list-item-icon>
+            <v-icon color="indigo">
+              mdi-email
+            </v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>aliconnors@example.com</v-list-item-title>
+            <v-list-item-subtitle>Personal</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item>
+          <v-list-item-action></v-list-item-action>
+
+          <v-list-item-content>
+            <v-list-item-title>ali_connors@example.com</v-list-item-title>
+            <v-list-item-subtitle>Work</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-divider inset></v-divider>
+
+        <v-list-item>
+          <v-list-item-icon>
+            <v-icon color="indigo">
+              mdi-map-marker
+            </v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>1400 Main Street</v-list-item-title>
+            <v-list-item-subtitle>Orlando, FL 79938</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-card>
+  </div>
+  `
+}
+
+const LoginView = {
+  data: function(){
+    return {
+      form: {
+        email: {
+          value: null,
+          label: "Email",
+          icon: "mdi-email",
+          type: "email",
+          rules: [v => !!v || "Email is required"],
+        },
+        password: {
+          value: null,
+          label: "Password",
+          icon: "mdi-lock",
+          type: "password",
+          rules: [v => !!v || "Password is required"],
+        },
+      },
+    }
+  },
+  methods: {
+    login(){
+      const isFormValid = this.$refs.form.validate()
+      if (!isFormValid) return
+      const email = this.form.email.value
+      const password = this.form.password.value
+      this.$store.dispatch("login", {email, password})
+    },
+  },
+  computed: {
+    ...Vuex.mapState({
+      loading: "loading",
+    }),
+  },
+  template: `
+    <div>
+      <v-progress-linear
+        :active="loading"
+        :indeterminate="loading"
+        absolute
+        top
+        color="primary"
+      ></v-progress-linear>
+      <v-row>
+        <v-spacer></v-spacer>
+        <v-col cols="12" sm="8" md="6" lg="4">
+          <h1 class="mb-4 primary--text">Login</h1>
+          <v-form ref="form" @submit.prevent="login">
+            <my-input :item="form.email"></my-input>
+            <my-input :item="form.password"></my-input>
+            <v-btn type="submit" color="primary" depressed block :disabled="loading">
+              <v-icon left>mdi-login</v-icon>
+              Login
+            </v-btn>
+          </v-form>
+        </v-col>
+        <v-spacer></v-spacer>
+      </v-row>
+    </div>
+  `
+}
+
+const TableView = {
+  data: function(){
+    return {
+      message: "I'm a single element in a flexbox container!",
+      items: null,
+      multiple: false,
+      clearable: true,
+      list: null,
+      search: null,
+      count: 0,
+      values:'',
+      headers: null,
+      rows: null
+    }
+  },
+  props: {
+    value: {
+      type: String,
+      default: 'Default Prop String',
+    }
+  },
+  methods: {
+   async greet(event) {
+      // `this` inside methods points to the current active instance
+      //console.log(`Hello ${event}!`)
+      // `event` is the native DOM event
+      if (event) {
+        console.info('greet(event)=',event)
+        this.items = await Utils.run('getDisplayValues',{
+          spreadsheetId:"1fMwuBSyzyDQ7fH5LX5pM_QJYTO3YdgpeQqhXKw4A0dw",
+          sheetName: String(event)
+        })
+      }
+    }
+  },
+  computed: {
+    // listeners () {
+    //   return {
+    //     // Pass all component listeners directly to input
+    //     ...this.$listeners,
+    //     // Override input listener to work with v-model
+    //     input: event => this.$emit('input', event.target.value)
+    //   }
+    // },
+    ...Vuex.mapState({
+      loading: "loading",
+    })
+  },
+  mounted:async function(){
+    console.log("Mounted!",'\nRunning Utils.run("Sheets")')
+    const sheets = await Utils.run('getSheets','1fMwuBSyzyDQ7fH5LX5pM_QJYTO3YdgpeQqhXKw4A0dw')
+    sheets ? (console.log('getSheets: ',sheets),this.list=sheets) : console.log("NO SHEETS RETURNED")
+  },
+  created: function() {
+    // console.log("Component TableView created")
+    // gapi.load('client', () => {
+    //   gapi.client.init({
+    //     apiKey: 'AIzaSyDipR8-nuVIjig9FipR3GoGySmAkeBDAwQ',
+    //     discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
+    //   }).then(() => {
+    //     gapi.client.sheets.spreadsheets.values.get({
+    //       spreadsheetId: '1fMwuBSyzyDQ7fH5LX5pM_QJYTO3YdgpeQqhXKw4A0dw',
+    //       range: 'users!A1:C',
+    //     }).then(response => {
+    //       const values = response.result.values;
+    //       const [headers,...rows] = values
+    //       this.headers = headers
+    //       this.rows = rows.map((v,i,d) => ({id: v[0],name: v[1],avatar: v[2]}))
+    //       this.items = rows
+    //       this.$store.state.items = values
+    //       // console.info(this.rows,'\n',this.$store)
+    //       // console.log('state: ',this.$store.state)
+    //     });
+    //   });
+    // });
+  },
+  watch: {
+   items(){
+      console.log('this.items',this.items)
+    },
+  },
+  template: `
+  <div>
+    <v-sheet class="d-flex bg-surface-variant">
+      <v-sheet class="ma-2 pa-2">
+        {{message}}
+      </v-sheet>
+    </v-sheet>
+    <v-autocomplete
+      placeholder="Select ..."
+      return-object
+      id="myaotocomplete"
+      v-if="rows"
+      clearable
+      chips
+      label="Autocomplete"
+      :items="items"
+      variant="solo"
+      hide-no-data
+      hide-selected
+      v-on:input="greet($event)"
+    ></v-autocomplete>
+      <v-sheet>
+      <span><v-btn v-on:click="count++">You clicked me {{ count }} times.</v-btn></span>
+    </v-sheet>
+      <v-autocomplete
+      placeholder="Select ..."
+      return-object
+      v-if="list"
+      clearable
+      chips
+      label="Autocomplete"
+      :items="list"
+      variant="solo"
+      hide-no-data
+      hide-selected
+      v-on:input="greet($event)"
+    ></v-autocomplete>
+  </div>
+  `
+}
+
+const PickerView = {
+  name: "picker-view",
+  data: function() {
+    return {
+      dialog: false,
+      pickerApiLoaded: false,
+      oauthToken: null,
+      picker: null
+    };
+  },
+  mounted() {
+    this.looad();
+    this.loadGooglePickerApi();
+  },
+  methods: {
+    async looad(){	
+      gapi.load('picker', {'callback': function() {
+        this.pickerApiLoaded = true;
+      }})
+      await google.script.run
+          .withFailureHandler(function (err){
+            console.log("error:",err)
+          })
+          .withSuccessHandler(this.createPicker)
+          .pickerConfig();
+    },
+    loadGooglePickerApi() {
+      const self = this;
+      gapi.load("auth", {
+        callback: function() {
+          gapi.auth.authorize(
+            {
+              client_id: "714436816912-t8tfn3v841iuu5c5ig875ooks4iadc1i.apps.googleusercontent.com",
+              scope: "https://www.googleapis.com/auth/drive.readonly",
+              immediate: false
+            },
+            function(result) {
+              if (result && !result.error) {
+                self.oauthToken = result.access_token;
+                gapi.load("picker", {
+                  callback: function() {
+                    self.pickerApiLoaded = true;
+                  }
+                });
+              }
+            }
+          );
+        }
+      });
+    },
+    createPicker(config) {
+      if (this.pickerApiLoaded && config.oauthToken) {
+        const picker = new google.picker.PickerBuilder()
+          .setOAuthToken(config.oauthToken)
+          .addView(google.picker.ViewId.DOCUMENTS)
+          .setCallback(this.pickerCallback)
+          .setDeveloperKey(config.developerKey)
+          .setOrigin(google.script.host.origin)
+          .build();
+        picker.setVisible(true);
+        this.picker = picker;
+      }
+    },
+    pickerCallback(data) {
+      if (
+        data[google.picker.Response.ACTION] ===
+        google.picker.Action.PICKED
+      ) {
+        const fileId = data[google.picker.Response.DOCUMENTS][0].id;
+        // Използвайте fileId за извършване на желаните операции с избрания файл
+        console.log("Selected File ID: " + fileId);
+      }
+    },
+    openPicker() {
+      this.createPicker();
+      this.dialog = true;
+    }
+  },
+  template:`
+    <v-dialog v-model="dialog" persistent max-width="600px">
+      <v-btn @click="openPicker">Open Google Picker</v-btn>
+    </v-dialog>`
+}
+
+const AnswerView = {
+  data: function() {
+    return {
+      question: '',
+      answer: 'Questions usually contain a question mark. ;-)'
+    }
+  },
+  watch: {
+    // whenever question changes, this function will run
+    question(newQuestion, oldQuestion) {
+      if (newQuestion.includes('?')) {
+        this.getAnswer()
+      }
+    }
+  },
+  methods: {
+    async getAnswer() {
+      this.answer = 'Thinking...'
+      try {
+        const res = await fetch('https://yesno.wtf/api')
+        .then(res => res.json())
+        .then(res => {
+          // this.answer = await (res.json()).answer
+          console.info('answer',res)
+          this.answer = res.answer
+        })
+        // this.answer = (await res.json()).answer
+      } catch (error) {
+        this.answer = 'Error! Could not reach the API. ' + error
+      }
+    }
+  },
+  template: `
+  <div>
+  <p>
+  Ask a yes/no question:
+  <input v-model="question" />
+  </p>
+  <p>{{ answer }}</p>
+  </div>
+  `
+}
+
+const VirtualDataTable = {
+  data: function () {
+    return {
+      search: '',
+      headers: [
+        {
+          text: 'Dessert (100g serving)',
+          align: 'start',
+          sortable: false,
+          value: 'name',
+        },
+        { text: 'Calories', value: 'calories' },
+        { text: 'Fat (g)', value: 'fat' },
+        { text: 'Carbs (g)', value: 'carbs' },
+        { text: 'Protein (g)', value: 'protein' },
+        { text: 'Iron (%)', value: 'iron' },
+      ],
+      items: [
+        {
+          name: 'Frozen Yogurt',
+          calories: 159,
+          fat: 6.0,
+          carbs: 24,
+          protein: 4.0,
+          iron: 1,
+        },
+        {
+          name: 'Ice cream sandwich',
+          calories: 237,
+          fat: 9.0,
+          carbs: 37,
+          protein: 4.3,
+          iron: 1,
+        },
+        {
+          name: 'Eclair',
+          calories: 262,
+          fat: 16.0,
+          carbs: 23,
+          protein: 6.0,
+          iron: 7,
+        },
+        {
+          name: 'Cupcake',
+          calories: 305,
+          fat: 3.7,
+          carbs: 67,
+          protein: 4.3,
+          iron: 8,
+        },
+        {
+          name: 'Gingerbread',
+          calories: 356,
+          fat: 16.0,
+          carbs: 49,
+          protein: 3.9,
+          iron: 16,
+        },
+        {
+          name: 'Jelly bean',
+          calories: 375,
+          fat: 0.0,
+          carbs: 94,
+          protein: 0.0,
+          iron: 0,
+        },
+        {
+          name: 'Lollipop',
+          calories: 392,
+          fat: 0.2,
+          carbs: 98,
+          protein: 0,
+          iron: 2,
+        },
+        {
+          name: 'Honeycomb',
+          calories: 408,
+          fat: 3.2,
+          carbs: 87,
+          protein: 6.5,
+          iron: 45,
+        },
+        {
+          name: 'Donut',
+          calories: 452,
+          fat: 25.0,
+          carbs: 51,
+          protein: 4.9,
+          iron: 22,
+        },
+        {
+          name: 'KitKat',
+          calories: 518,
+          fat: 26.0,
+          carbs: 65,
+          protein: 7,
+          iron: 6,
+        },{
+          name: 'Ice cream sandwich',
+          calories: 237,
+          fat: 9.0,
+          carbs: 37,
+          protein: 4.3,
+          iron: 1,
+        },
+        {
+          name: 'Eclair',
+          calories: 262,
+          fat: 16.0,
+          carbs: 23,
+          protein: 6.0,
+          iron: 7,
+        },
+        {
+          name: 'Cupcake',
+          calories: 305,
+          fat: 3.7,
+          carbs: 67,
+          protein: 4.3,
+          iron: 8,
+        },
+        {
+          name: 'Gingerbread',
+          calories: 356,
+          fat: 16.0,
+          carbs: 49,
+          protein: 3.9,
+          iron: 16,
+        },
+        {
+          name: 'Jelly bean',
+          calories: 375,
+          fat: 0.0,
+          carbs: 94,
+          protein: 0.0,
+          iron: 0,
+        },
+        {
+          name: 'Lollipop',
+          calories: 392,
+          fat: 0.2,
+          carbs: 98,
+          protein: 0,
+          iron: 2,
+        },
+        {
+          name: 'Honeycomb',
+          calories: 408,
+          fat: 3.2,
+          carbs: 87,
+          protein: 6.5,
+          iron: 45,
+        },
+        {
+          name: 'Donut',
+          calories: 452,
+          fat: 25.0,
+          carbs: 51,
+          protein: 4.9,
+          iron: 22,
+        },
+        {
+          name: 'KitKat',
+          calories: 518,
+          fat: 26.0,
+          carbs: 65,
+          protein: 7,
+          iron: 6,
+        },
+      ],
+    }
+  },
+  computed: {
+    numberOfPages () {
+      return Math.ceil(this.items.length / this.itemsPerPage)
+    },
+    filteredKeys () {
+      return this.keys.filter(key => key !== 'Name')
+    },
+  },
+  methods: {
+    nextPage () {
+      if (this.page + 1 <= this.numberOfPages) this.page += 1
+      console.log(this.page)
+    },
+    formerPage () {
+      if (this.page - 1 >= 1) this.page -= 1
+    },
+    updateItemsPerPage (number) {
+      this.itemsPerPage = number
+      console.log('updateItemsPerPage (',number,')')
+    },
+  },
+  template: `
+  <v-card>
+    <v-card-title>
+      Nutrition
+      <v-spacer></v-spacer>
+      <v-text-field
+        v-model="search"
+        append-icon="mdi-magnify"
+        label="Search"
+        single-line
+        hide-details
+        clearable
+        outlined
+      ></v-text-field>
+    </v-card-title>
+    <v-data-table
+      fixed-header
+      :headers="headers"
+      :items="items"
+      :search="search"
+      mobile-breakpoint="10"
+    ></v-data-table>
+  </v-card>
+  `
+}
+
+const VDataTable = {
+  data: function() {
+    return {
+      headers: [
+        {
+          text: 'Dessert (100g serving)',
+          align: 'start',
+          sortable: false,
+          value: 'name',
+        },
+        { text: 'Calories', value: 'calories' },
+        { text: 'Fat (g)', value: 'fat' },
+        { text: 'Carbs (g)', value: 'carbs' },
+        { text: 'Protein (g)', value: 'protein' },
+        { text: 'Iron (%)', value: 'iron' },
+      ],
+      items: [
+        {
+          name: 'Frozen Yogurt',
+          calories: 159,
+          fat: 6.0,
+          carbs: 24,
+          protein: 4.0,
+          iron: 1,
+        },
+        {
+          name: 'Ice cream sandwich',
+          calories: 237,
+          fat: 9.0,
+          carbs: 37,
+          protein: 4.3,
+          iron: 1,
+        },
+      ],
+      // items: [], // вашите данни за таблицата
+      // headers: [], // вашите заглавия на колоните
+      options: {
+        rowsPerPage: 1, // брой редове на страница
+        sortBy: '', // поле, по което да се сортира
+        sortDesc: false // дали да се сортира в обратен ред
+      },
+      columns: [], // вашите опции за сортиране
+    };
+  },
+  methods: {
+    applySettings() {
+      // Извършвате нужните действия с настройките
+      // например, извиквате API за презареждане на данните с новите настройки
+    },
+    async readData() {
+       await google.script.run.withSuccessHandler((data) => {
+        // Присвоявате получените данни на items и headers
+        const p = JSON.parse(data)
+        this.headers = p.headers
+        this.items = p.rows // пропускате реда със заглавията
+        console.log(this.items,'\n',this.headers)
+      }).readDataFromSheets();
+    },
+    writeData() {
+      const values = [this.headers, ...this.items];
+      // google.script.run.writeDataToSheets(values);
+      console.log('Disabled in CODE')
+    },
+  },
+  template:`
+    <div>
+    <v-menu offset-y>
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn v-bind="attrs" v-on="on">Настройки</v-btn>
+      </template>
+      <v-card>
+        <v-card-text>
+          <v-form @submit.prevent="applySettings">
+            <v-text-field v-model="options.rowsPerPage" label="Брой редове на страница"></v-text-field>
+            <v-select v-model="options.sortBy" :items="columns" label="Сортиране по"></v-select>
+            <v-checkbox v-model="options.sortDesc" label="Сортиране в обратен ред"></v-checkbox>
+            <v-btn type="submit">Приложи</v-btn>
+          </v-form>
+        </v-card-text>
+      </v-card>
+    </v-menu>
+
+    <v-data-table
+      :items="items"
+      :headers="headers"
+      dense
+      mobile-breakpoint="10"
+    ></v-data-table>
+
+    <v-btn @click="readData">Прочети от Google Sheets</v-btn>
+    <v-btn @click="writeData">Запиши в Google Sheets</v-btn>
+  </div>
+  `
+}
+
+const routes = [
+  { path: '/', component: HomeView, meta: {icon: "mdi-home", title: "Home"} },
+  { path: '/about', component: AboutView, meta: {icon: "mdi-information", title: "About"} },
+  { path: '/table', component: TableView, meta: {icon: "mdi-table", title: "Table"} },
+  { path: '/user', component: UserView, meta: {icon: "mdi-account-circle", title: "User"} },
+  { path: '/login', component: LoginView, meta: {icon: "mdi-login", title: "Login"} },
+  { path: '/answer', component: AnswerView, meta: {icon: "mdi-head-question-outline", title: "Answer"} },
+  { path: '/virtual', component: VirtualDataTable, meta: {icon: "mdi-table", title: "Virtual Data Table"} },
+  { path: '/datatable', component: VDataTable, meta: {icon: "mdi-table", title: "Virtual Data Table 2"} },
+  { path: '/pick', component: PickerView, meta: {icon: "mdi-file", title: "Google Picker"} },
+]
+
+const router = new VueRouter({
+  routes
+})
+
+router.beforeEach( async (to, from, next) => {
+  const token = Utils.getToken()
+  let isAuth = store.getters.isAuth
+  if (token && !isAuth) {
+    await store.dispatch("login", {token})
+    isAuth = store.getters.isAuth
+  }
+  if (to.path !== '/login' && !isAuth) return next("/login")
+  return next()
+})
+
+router.afterEach((to, from) => {
+  google.script.history.push(null, null, to.path)
+  console.info('google.script.history: ',google.script.history)
+})
+
+</script>
